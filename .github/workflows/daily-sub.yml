@@ -40,20 +40,3 @@ jobs:
             git push
           fi
 
-      # 谁最后跑完谁触发 Z:保证 Z 抓的是 X、Y 都更新过的数据
-      - name: 通知 Z 抓取
-        if: success()
-        env:
-          GH_TOKEN: ${{ secrets.Z_DISPATCH_TOKEN }}
-        run: |
-          status=$(gh api "repos/hkjych/X/actions/workflows/fetch.yml/runs?per_page=1" --jq '.workflow_runs[0].status // "idle"')
-          echo "X 最新运行状态: $status"
-          case "$status" in
-            queued|in_progress|requested|waiting|pending)
-              echo "X 还在跑,交给 X 结束后触发 Z"
-              exit 0
-              ;;
-          esac
-          gh api -X POST repos/hkjych/Z/dispatches -f event_type=upstream-done
-          echo "已触发 Z 抓取"
-
