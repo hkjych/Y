@@ -2,7 +2,7 @@ name: daily-sub
 
 on:
   schedule:
-    - cron: '0 */6 * * *'        # 每 6 小时(UTC 00/06/12/18)
+    - cron: '0 */8 * * *'        # 每 8 小时(UTC 00/08/16)
   workflow_dispatch:
 
 permissions:
